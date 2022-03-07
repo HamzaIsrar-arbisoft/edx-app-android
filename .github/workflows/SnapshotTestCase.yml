@@ -23,7 +23,7 @@ jobs:
       - name: Build Project
         run: ./gradlew assembleDebug
 
-  test:
+  Android_CI:
     needs: build
     runs-on: macos-latest
     timeout-minutes: 30
@@ -51,6 +51,9 @@ jobs:
 
       - name: Gradle cache
         uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build
+          build-root-directory: gradle/
 
       - name: AVD cache
         uses: actions/cache@v2

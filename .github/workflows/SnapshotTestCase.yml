@@ -50,12 +50,7 @@ jobs:
           pip install --user Pillow==6.2.2
 
       - name: Gradle cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}-${{ hashFiles('**/buildSrc/**/*.kt') }}
+        uses: gradle/gradle-build-action@v2
 
       - name: AVD cache
         uses: actions/cache@v2
@@ -75,8 +70,9 @@ jobs:
           target: google_apis
           profile: Nexus 4
           force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: false
-          script: echo "Done"
+          script: echo "Generated AVD snapshot for caching."
 
       - name: Run tests
         uses: ReactiveCircus/android-emulator-runner@v2
@@ -87,7 +83,7 @@ jobs:
           target: google_apis
           profile: Nexus 4
           force-avd-creation: false
-          emulator-options: -no-snapshot-save
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           script: |
             chmod +x gradlew
             ./gradlew jacocoTestProdDebugUnitTestReport
@@ -102,7 +98,7 @@ jobs:
           target: google_apis
           profile: Nexus 4
           force-avd-creation: false
-          emulator-options: -no-snapshot-save
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           script: |
             ./gradlew verifyProdDebuggableAndroidTestScreenshotTest -PdisablePreDex
 
@@ -115,7 +111,7 @@ jobs:
           target: google_apis
           profile: Nexus 4
           force-avd-creation: false
-          emulator-options: -no-snapshot-save
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           script: |
             ./gradlew copyLintBuildArtifacts
             ./gradlew copyUnitTestBuildArtifacts

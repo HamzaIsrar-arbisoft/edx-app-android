@@ -103,6 +103,7 @@ jobs:
             ./gradlew verifyProdDebuggableAndroidTestScreenshotTest -PdisablePreDex
 
       - name: Run Artifacts
+        if: always()
         uses: ReactiveCircus/android-emulator-runner@v2
         with:
           api-level: 28
@@ -132,10 +133,12 @@ jobs:
           path: artifacts
 
       - name: Download Test Reports Folder
+        if: always()
         uses: actions/download-artifact@v2
         with:
           name: report
           path: OpenEdXMobile/build/reports/coverage/debug
 
       - name: Upload Test Report
+        if: always()
         run: bash <(curl -s https://codecov.io/bash) -f "artifacts/reports/jacoco/jacocoTestProdDebugUnitTestReport/jacocoTestProdDebugUnitTestReport.xml"

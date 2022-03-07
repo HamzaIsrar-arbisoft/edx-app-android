@@ -26,6 +26,10 @@ jobs:
   Android_CI:
     needs: build
     runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        api-level: [ 21, 27, 30 ]
     timeout-minutes: 30
 
     steps:
@@ -59,13 +63,13 @@ jobs:
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-          key: avd-28
+          key: avd-${{ matrix.api-level }}
 
       - name: create AVD and generate snapshot for caching
         if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 28
+          api-level: ${{ matrix.api-level }}
           arch: x86
           target: google_apis
           profile: Nexus 4
@@ -77,7 +81,7 @@ jobs:
       - name: Run tests
         uses: ReactiveCircus/android-emulator-runner@v2
         with:
-          api-level: 28
+          api-level: ${{ matrix.api-level }}
           arch: x86
           disable-animations: true
           target: google_apis
@@ -92,7 +96,7 @@ jobs:
         if: always()
         uses: ReactiveCircus/android-emulator-runner@v2
         with:
-          api-level: 28
+          api-level: ${{ matrix.api-level }}
           arch: x86
           disable-animations: true
           target: google_apis
@@ -106,7 +110,7 @@ jobs:
         if: always()
         uses: ReactiveCircus/android-emulator-runner@v2
         with:
-          api-level: 28
+          api-level: ${{ matrix.api-level }}
           arch: x86
           disable-animations: true
           target: google_apis

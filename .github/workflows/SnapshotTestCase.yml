@@ -20,8 +20,8 @@ jobs:
           distribution: 'adopt'
           java-version: '11'
 
-      - name: Build Project
-        run: ./gradlew assembleDebug
+#      - name: Build Project
+#        run: ./gradlew assembleDebug
 
   Android_CI:
     needs: build

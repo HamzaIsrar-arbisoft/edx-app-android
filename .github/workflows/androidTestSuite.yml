@@ -1,4 +1,4 @@
-name: Android CI
+name: Android Test Suite
 on:
   pull_request:
   push:
@@ -6,48 +6,30 @@ on:
       - master
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Set up JDK 11
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'adopt'
-          java-version: '11'
-
-#      - name: Build Project
-#        run: ./gradlew assembleDebug
-
   Android_CI:
-    needs: build
+    name: Android API ${{ matrix.api-level }}
     runs-on: macos-latest
     strategy:
       fail-fast: false
       matrix:
         api-level: [ 21, 27, 30 ]
-    timeout-minutes: 30
 
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: set up JDK 11
+      - name: Setup JDK 11
         uses: actions/setup-java@v2
         with:
           distribution: 'adopt'
           java-version: '11'
 
-      - name: Setup python
+      - name: Setup Python 2.7
         uses: actions/setup-python@v2
         with:
           python-version: 2.7
 
-      - name: Install dependecies
+      - name: Install Pillow and Codecov
         run: |
           python -m pip install --upgrade pip
           pip install --user codecov
@@ -56,7 +38,7 @@ jobs:
       - name: Gradle cache
         uses: gradle/gradle-build-action@v2
 
-      - name: AVD cache
+      - name: Android Virtual Device cache
         uses: actions/cache@v2
         id: avd-cache
         with:
@@ -65,7 +47,7 @@ jobs:
             ~/.android/adb*
           key: avd-${{ matrix.api-level }}
 
-      - name: create AVD and generate snapshot for caching
+      - name: Create AVD and generate snapshot for caching
         if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -76,7 +58,6 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: false
-          script: echo "Generated AVD snapshot for caching."
 
       - name: Run tests
         uses: ReactiveCircus/android-emulator-runner@v2
@@ -107,7 +88,6 @@ jobs:
             ./gradlew verifyProdDebuggableAndroidTestScreenshotTest -PdisablePreDex
 
       - name: Run Artifacts
-        if: always()
         uses: ReactiveCircus/android-emulator-runner@v2
         with:
           api-level: ${{ matrix.api-level }}
@@ -122,27 +102,23 @@ jobs:
             ./gradlew copyUnitTestBuildArtifacts
             ./gradlew pullProdDebuggableAndroidTestScreenshots -PdisablePreDex
 
-      - name: Upload Reports
-        if: always()
+      - name: Upload Screenshot Test cases report
         uses: actions/upload-artifact@v2
         with:
-          name: SS Reports
+          name: report
           path: OpenEdXMobile/build/screenshotsProdDebuggableAndroidTest
 
-      - name: Generate Report
-        if: always()
+      - name: Upload Test Report
         uses: actions/upload-artifact@v2
         with:
           name: report
           path: artifacts
 
       - name: Download Test Reports Folder
-        if: always()
         uses: actions/download-artifact@v2
         with:
           name: report
           path: OpenEdXMobile/build/reports/coverage/debug
 
       - name: Upload Test Report
-        if: always()
         run: bash <(curl -s https://codecov.io/bash) -f "artifacts/reports/jacoco/jacocoTestProdDebugUnitTestReport/jacocoTestProdDebugUnitTestReport.xml"

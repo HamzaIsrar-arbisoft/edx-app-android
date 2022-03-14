@@ -4,7 +4,7 @@ on: [ push ]
 jobs:
   android_test_cases:
     name: Android Tests
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout

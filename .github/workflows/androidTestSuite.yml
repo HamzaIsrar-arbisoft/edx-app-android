@@ -73,13 +73,25 @@ jobs:
           api-level: ${{ matrix.api-level }}
           arch: x86
           target: google_apis
-          disable-animations: false
+          disable-animations: true
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           script: echo "Generated AVD snapshot for caching."
 
       - name: Run E2E
-        if: always()
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          profile: Nexus 4
+          api-level: ${{ matrix.api-level }}
+          arch: x86
+          target: google_apis
+          disable-animations: true
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          script: |
+            ./gradlew verifyProdDebuggableAndroidTestScreenshotTest -PdisablePreDex --scan
+
+      - name: Run Artifacts
         uses: ReactiveCircus/android-emulator-runner@v2
         with:
           profile: Nexus 4
@@ -90,23 +102,12 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           script: |
-            chmod +x gradlew
-            ./gradlew verifyProdDebuggableAndroidTestScreenshotTest -PdisablePreDex --scan
-
-      - name: Build Test Files
-        if: always()
-        run: |
-          ./gradlew copyLintBuildArtifacts
-          ./gradlew copyUnitTestBuildArtifacts
-          ./gradlew pullProdDebuggableAndroidTestScreenshots -PdisablePreDex
-
-      - name: Upload Screenshot Test cases report
-        uses: actions/upload-artifact@v2
-        with:
-          name: report
-          path: OpenEdXMobile/build/screenshotsProdDebuggableAndroidTest
+            ./gradlew copyLintBuildArtifacts
+            ./gradlew copyUnitTestBuildArtifacts
+            ./gradlew pullProdDebuggableAndroidTestScreenshots -PdisablePreDex
 
       - name: Upload Test Report
+        if: always()
         uses: actions/upload-artifact@v2
         with:
           name: report

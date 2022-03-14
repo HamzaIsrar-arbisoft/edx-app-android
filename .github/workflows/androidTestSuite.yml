@@ -1,9 +1,5 @@
 name: Android Test Suite
-on:
-  pull_request:
-  push:
-    branches:
-      - master
+on: [ push ]
 
 jobs:
   android_ci:
@@ -38,6 +34,11 @@ jobs:
       - name: Gradle cache
         uses: gradle/gradle-build-action@v2
 
+      - name: Run tests
+        run: |
+          chmod +x gradlew
+          ./gradlew jacocoTestProdDebugUnitTestReport
+
       - name: AVD cache
         uses: actions/cache@v2
         id: avd-cache
@@ -59,11 +60,6 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           script: echo "Generated AVD snapshot for caching."
-
-      - name: Run tests
-        run: |
-          chmod +x gradlew
-          ./gradlew jacocoTestProdDebugUnitTestReport
 
       - name: Run E2E
         if: always()

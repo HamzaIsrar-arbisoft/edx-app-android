@@ -20,11 +20,6 @@ public class UserProfileBioFragmentTest extends PresenterFragmentTest<UserProfil
         binding = DataBindingUtil.getBinding(fragment.getView());
         assertThat(binding).isNotNull();
     }
-    @Test
-    public void click_onParentalConsentEditProfileButton_callsEditProfile() {
-        binding.parentalConsentEditProfileButton.performClick();
-        verify(presenter).onEditProfile();
-    }
 
     @Test
     public void click_onIncompleteEditProfileButton_callsEditProfile() {

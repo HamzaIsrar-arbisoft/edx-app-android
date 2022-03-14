@@ -2,7 +2,29 @@ name: Android Test Suite
 on: [ push ]
 
 jobs:
-  android_ci:
+  android_test_cases:
+    name: Android Tests
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '8'
+
+      - name: Gradle cache
+        uses: gradle/gradle-build-action@v2
+
+      - name: Run tests
+        run: |
+          chmod +x gradlew
+          ./gradlew jacocoTestProdDebugUnitTestReport
+
+  android_screenshot:
     name: Android API ${{ matrix.api-level }}
     runs-on: macos-latest
     strategy:
@@ -20,6 +42,9 @@ jobs:
           distribution: 'adopt'
           java-version: '8'
 
+      - name: Gradle cache
+        uses: gradle/gradle-build-action@v2
+
       - name: Setup Python 2.7
         uses: actions/setup-python@v2
         with:
@@ -30,14 +55,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install --user codecov
           pip install --user Pillow==6.2.2
-
-      - name: Gradle cache
-        uses: gradle/gradle-build-action@v2
-
-      - name: Run tests
-        run: |
-          chmod +x gradlew
-          ./gradlew jacocoTestProdDebugUnitTestReport
 
       - name: AVD cache
         uses: actions/cache@v2

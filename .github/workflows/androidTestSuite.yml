@@ -93,6 +93,7 @@ jobs:
 
       - name: Run Artifacts
         uses: ReactiveCircus/android-emulator-runner@v2
+        if: always()
         with:
           profile: Nexus 4
           api-level: ${{ matrix.api-level }}

@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  Android_CI:
+  android_ci:
     name: Android API ${{ matrix.api-level }}
     runs-on: macos-latest
     strategy:
@@ -116,7 +116,7 @@ jobs:
           name: report
           path: artifacts
 
-      - name: Download Test Reports Folder
+      - name: Download Test Reports
         uses: actions/download-artifact@v2
         with:
           name: report

@@ -97,9 +97,13 @@ jobs:
           script: |
             chmod +x gradlew
             ./gradlew verifyProdDebuggableAndroidTestScreenshotTest -PdisablePreDex
-            ./gradlew copyLintBuildArtifacts
-            ./gradlew copyUnitTestBuildArtifacts
-            ./gradlew pullProdDebuggableAndroidTestScreenshots -PdisablePreDex
+
+      - name: Build Test Files
+        if: always()
+        run: |
+          ./gradlew copyLintBuildArtifacts
+          ./gradlew copyUnitTestBuildArtifacts
+          ./gradlew pullProdDebuggableAndroidTestScreenshots -PdisablePreDex
 
       - name: Upload Screenshot Test cases report
         uses: actions/upload-artifact@v2

@@ -51,10 +51,7 @@ jobs:
           python-version: 2.7
 
       - name: Install Pillow and Codecov
-        run: |
-          python -m pip install --upgrade pip
-          pip install --user codecov
-          pip install --user Pillow==6.2.2
+        run: pip install -r requirements.txt
 
       - name: AVD cache
         uses: actions/cache@v2

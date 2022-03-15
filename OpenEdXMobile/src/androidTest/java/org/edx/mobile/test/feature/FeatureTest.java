@@ -1,11 +1,11 @@
 package org.edx.mobile.test.feature;
 
-
 import android.app.Application;
 
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.core.EdxDefaultModule;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.junit.Before;
@@ -20,7 +20,7 @@ public abstract class FeatureTest {
     @Before
     public void setup() {
         // Ensure we are not logged in
-        final Application application = ApplicationProvider.getApplicationContext();
+        final Application application = MainApplication.instance();
         environment = EntryPointAccessors
                 .fromApplication(application.getApplicationContext(), EdxDefaultModule.ProviderEntryPoint.class).getEnvironment();
         environment.getLoginPrefs().clear();

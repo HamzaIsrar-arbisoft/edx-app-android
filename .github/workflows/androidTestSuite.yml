@@ -32,6 +32,14 @@ jobs:
           name: Unit Test Report
           path: artifacts
 
+      - name: Setup Python 2.7
+        uses: actions/setup-python@v2
+        with:
+          python-version: 2.7
+
+      - name: Install Codecov
+        run: pip install -r requirements.txt
+
       - name: Upload Test Report
         run: bash <(curl -s https://codecov.io/bash) -f "artifacts/reports/jacoco/jacocoTestProdDebugUnitTestReport/jacocoTestProdDebugUnitTestReport.xml"
 
@@ -57,7 +65,7 @@ jobs:
         with:
           python-version: 2.7
 
-      - name: Install Pillow and Codecov
+      - name: Install Pillow
         run: pip install -r requirements.txt
 
       - name: AVD cache

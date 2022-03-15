@@ -102,7 +102,7 @@ jobs:
           path: artifacts
 
       - name: Uplaod Coverage Reports
-        uses: actions/upload-artifact@v
+        uses: actions/upload-artifact@v2
         with:
           name: report
           path: OpenEdXMobile/build/reports/coverage/debug

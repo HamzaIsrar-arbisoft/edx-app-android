@@ -92,6 +92,7 @@ jobs:
           script: |
             ./gradlew verifyProdDebuggableAndroidTestScreenshotTest -PdisablePreDex
             ./gradlew pullProdDebuggableAndroidTestScreenshots -PdisablePreDex
+            mv OpenEdXMobile/screenshots artifacts/
 
       - name: Upload Test Report
         if: always()

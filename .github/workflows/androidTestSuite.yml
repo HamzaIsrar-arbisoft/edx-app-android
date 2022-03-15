@@ -3,7 +3,7 @@ on: [ push ]
 
 jobs:
   android_test_cases:
-    name: Android Tests
+    name: Android Unit Tests
     runs-on: ubuntu-latest
 
     steps:
@@ -32,13 +32,12 @@ jobs:
           name: Unit Test Report
           path: artifacts
 
+      - name: Upload Test Report
+        run: bash <(curl -s https://codecov.io/bash) -f "artifacts/reports/jacoco/jacocoTestProdDebugUnitTestReport/jacocoTestProdDebugUnitTestReport.xml"
+
   android_screenshot:
-    name: Android API ${{ matrix.api-level }}
+    name: Android Screenshot Tests
     runs-on: macos-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        api-level: [ 28 ]
 
     steps:
       - name: Checkout
@@ -68,14 +67,14 @@ jobs:
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-          key: avd-${{ matrix.api-level }}
+          key: avd-21
 
       - name: Create AVD and generate snapshot for caching
         if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@v2
         with:
           profile: Nexus 4
-          api-level: ${{ matrix.api-level }}
+          api-level: 21
           arch: x86
           target: google_apis
           disable-animations: true
@@ -87,7 +86,7 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           profile: Nexus 4
-          api-level: ${{ matrix.api-level }}
+          api-level: 21
           arch: x86
           target: google_apis
           script: |
@@ -100,12 +99,3 @@ jobs:
         with:
           name: Screenshot Test Report
           path: artifacts
-
-      - name: Uplaod Coverage Reports
-        uses: actions/upload-artifact@v2
-        with:
-          name: report
-          path: OpenEdXMobile/build/reports/coverage/debug
-
-      - name: Upload Test Report
-        run: bash <(curl -s https://codecov.io/bash) -f "artifacts/reports/jacoco/jacocoTestProdDebugUnitTestReport/jacocoTestProdDebugUnitTestReport.xml"

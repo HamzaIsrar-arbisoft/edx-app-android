@@ -23,6 +23,15 @@ jobs:
         run: |
           chmod +x gradlew
           ./gradlew jacocoTestProdDebugUnitTestReport
+          ./gradlew copyUnitTestBuildArtifacts
+          ./gradlew copyLintBuildArtifacts
+
+      - name: Upload Test Report
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: Unit Test Report
+          path: artifacts
 
   android_screenshot:
     name: Android API ${{ matrix.api-level }}
@@ -82,29 +91,15 @@ jobs:
           api-level: ${{ matrix.api-level }}
           arch: x86
           target: google_apis
-          script: ./gradlew verifyProdDebuggableAndroidTestScreenshotTest -PdisablePreDex
-
-      - name: Run Artifacts
-        uses: ReactiveCircus/android-emulator-runner@v2
-        if: always()
-        with:
-          profile: Nexus 4
-          api-level: ${{ matrix.api-level }}
-          arch: x86
-          target: google_apis
-          disable-animations: true
-          force-avd-creation: false
-          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           script: |
-            ./gradlew copyLintBuildArtifacts
-            ./gradlew copyUnitTestBuildArtifacts
+            ./gradlew verifyProdDebuggableAndroidTestScreenshotTest -PdisablePreDex
             ./gradlew pullProdDebuggableAndroidTestScreenshots -PdisablePreDex
 
       - name: Upload Test Report
         if: always()
         uses: actions/upload-artifact@v2
         with:
-          name: report
+          name: Screenshot Test Report
           path: artifacts
 
       - name: Download Test Reports

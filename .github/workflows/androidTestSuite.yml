@@ -11,19 +11,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - run: |
-          mkdir -p artifacts/reports/jaco/jac
-          touch artifacts/reports/jaco/jac/jacocoTestProdDebugUnitTestReport.xml
-
-      # Upload the test report to Codecov for coverage report
-      - name: Codecov Report
-        uses: codecov/codecov-action@v2
-        with:
-          directory: artifacts
-          files: jacocoTestProdDebugUnitTestReport.xml
-          fail_ci_if_error: true
-          verbose: true
-
       # Setup the Java environment
       - name: Setup JDK
         uses: actions/setup-java@v2
@@ -42,7 +29,7 @@ jobs:
           ./gradlew jacocoTestProdDebugUnitTestReport
           ./gradlew copyUnitTestBuildArtifacts
 
-      # Uploads the folder or file in path to Github
+      # Uploads the folder or file in path to GitHub
       - name: Upload Test Report
         # Run this step even if the previous fails
         if: always()
@@ -52,13 +39,21 @@ jobs:
           path: artifacts
 
       # Upload the test report to Codecov for coverage report
-      - name: Codecov Report
+      - name: Generate Codecov Report
         uses: codecov/codecov-action@v2
         with:
           directory: artifacts
           files: jacocoTestProdDebugUnitTestReport.xml
           fail_ci_if_error: true
           verbose: true
+          path_to_write_report: ./coverage/codecov_report.txt
+
+      # Upload the coverage file to GitHub
+      - name: Upload Codecove Report
+        uses: actions/upload-artifact@v2
+        with:
+          name: Code Coverage Report
+          path: ./coverage/codecov_report.txt
 
   android_screenshot:
     name: Android Instrumented Tests
@@ -136,7 +131,7 @@ jobs:
             ./gradlew pullProdDebuggableAndroidTestScreenshots -PdisablePreDex
             mv OpenEdXMobile/screenshots artifacts/
 
-      # Uploads the folder or file in path to Github
+      # Uploads the folder or file in path to GitHub
       - name: Upload Test Report
         if: always()
         uses: actions/upload-artifact@v2

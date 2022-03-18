@@ -39,21 +39,20 @@ jobs:
           path: artifacts
 
       # Upload the test report to Codecov for coverage report
-      - name: Generate Codecov Report
+      - name: Codecov Report
         uses: codecov/codecov-action@v2
         with:
           directory: artifacts
           files: jacocoTestProdDebugUnitTestReport.xml
           fail_ci_if_error: true
           verbose: true
-          path_to_write_report: ./coverage/codecov_report.txt
 
   android_screenshot:
     name: Android Instrumented Tests
     # The macOS VM provided by GitHub Actions has HAXM installed so we are able to create a new AVD
     # instance, launch an emulator with hardware acceleration, and run our Android tests directly
     # on the VM.
-    # Include Screenshot Tests
+    # Includes Screenshot Tests
     # Ref: https://github.com/marketplace/actions/android-emulator-runner
     runs-on: macos-11
 
@@ -77,7 +76,7 @@ jobs:
           python-version: 2.7
 
       # Install requirements for screenshot testing
-      - name: Install Requirments
+      - name: Install Requirements
         run: pip install -r requirements.txt
 
       # Cache and restore the Gradle dependencies on multiple runs

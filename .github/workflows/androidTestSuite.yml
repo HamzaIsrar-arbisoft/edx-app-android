@@ -40,7 +40,7 @@ jobs:
 
       # Upload the test report to Codecov for coverage report
       - name: Codecov Report
-      - uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v2
         with:
           directory: artifacts/
           files: ./jacocoTestProdDebugUnitTestReport.xml

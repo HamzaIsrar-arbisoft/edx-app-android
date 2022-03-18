@@ -48,13 +48,6 @@ jobs:
           verbose: true
           path_to_write_report: ./coverage/codecov_report.txt
 
-      # Upload the coverage file to GitHub
-      - name: Upload Codecove Report
-        uses: actions/upload-artifact@v2
-        with:
-          name: Code Coverage Report
-          path: ./coverage/codecov_report.txt
-
   android_screenshot:
     name: Android Instrumented Tests
     # The macOS VM provided by GitHub Actions has HAXM installed so we are able to create a new AVD

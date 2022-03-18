@@ -12,7 +12,7 @@ jobs:
         uses: actions/checkout@v2
 
       - run: |
-          mkdir artifacts/reports/jaco/jac
+          mkdir -p artifacts/reports/jaco/jac
           touch artifacts/reports/jaco/jac/jacocoTestProdDebugUnitTestReport.xml
 
       # Upload the test report to Codecov for coverage report

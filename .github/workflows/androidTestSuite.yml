@@ -11,6 +11,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - run: |
+          mkdir artifacts/reports/jaco/jac
+          touch artifacts/reports/jaco/jac/jacocoTestProdDebugUnitTestReport.xml
+
+      # Upload the test report to Codecov for coverage report
+      - name: Codecov Report
+        uses: codecov/codecov-action@v2
+        with:
+          directory: artifacts
+          files: jacocoTestProdDebugUnitTestReport.xml
+          fail_ci_if_error: true
+          verbose: true
+
       # Setup the Java environment
       - name: Setup JDK
         uses: actions/setup-java@v2

@@ -1,11 +1,7 @@
 name: Android Test Suite
 
 # The workflow will start for every PR against master branch
-on:
-  pull_request:
-  push:
-    branches:
-      - master
+on: [push]
 
 # Multiple jobs run in parallel
 jobs:

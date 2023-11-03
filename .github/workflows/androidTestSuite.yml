@@ -18,39 +18,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      # Setup the Java environment
-      - name: Setup JDK
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'adopt'
-          java-version: '17'
-
-      # Cache and restore the Gradle dependencies on multiple runs
-      - name: Gradle cache
-        uses: gradle/gradle-build-action@v2
-
-      # Run android unit tests & organize test reports
-      - name: Run tests
-        run: |
-          chmod +x gradlew
-          ./gradlew jacocoProdDebugUnitTestReport
-          ./gradlew copyUnitTestBuildArtifacts
-
-      # Uploads the folder or file in path to GitHub
-      - name: Upload Test Report
-        # Run this step even if the previous fails
-        if: always()
-        uses: actions/upload-artifact@v2
-        with:
-          name: Unit Test Report
-          path: artifacts
       # TODO: Enable once Codecov configured with the repo by setting up `fail_ci_if_error` to true
       # Upload the test report to Codecov for coverage report
       - name: Codecov Report
         uses: codecov/codecov-action@v2
         with:
           directory: artifacts
-          files: jacocoProdDebugUnitTestReport.xml
+          files: jacocoTestProdDebugUnitTestReport.xml
           fail_ci_if_error: false
           verbose: true
 

@@ -694,11 +694,18 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
         return null
     }
 
+    private fun getCurrentComdponent(): CourseComponent? {
+        if (binding.pager2.adapter is CourseUnitPagerAdapter) {
+            return (binding.pager2.adapter as CourseUnitPagerAdapter).getComponent(binding.pager2.currentItem)
+        }
+        return null
+    }
+
     private fun showCelebrationModal(reCreate: Boolean) {
         val celebrationDialog = CelebratoryModalDialogFragment.newInstance(object :
             CelebratoryModalDialogFragment.CelebratoryModelCallback {
             override fun onKeepGoing() {
-                EventBus.getDefault().postSticky(VideoPlaybackEvent(false))
+                EventBus.getDefault().post(VideoPlaybackEvent(false))
             }
 
             override fun onCelebrationShare(anchor: View) {

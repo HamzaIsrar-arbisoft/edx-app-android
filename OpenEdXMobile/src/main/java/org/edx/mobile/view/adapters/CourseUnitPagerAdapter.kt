@@ -71,10 +71,14 @@ class CourseUnitPagerAdapter(
             }
 
             minifiedUnit is VideoBlockModel -> {
-                val isYoutubeVideo = minifiedUnit.data.encodedVideos.isYoutubeVideo
+                val isYoutubeVideo = minifiedUnit.data.encodedVideos.isYoutubeVideo && false
                 when {
+
+                    isYoutubeVideo -> {
+                        CourseUnitOnlyOnYoutubeFragment.newInstance(minifiedUnit)
+                    }
+
                     VideoUtil.isCourseUnitVideo(environment, minifiedUnit) -> {
-                        minifiedUnit.setVideoThumbnail(courseData.course.course_image)
                         CourseUnitVideoPlayerFragment.newInstance(
                             minifiedUnit,
                             pos < componentList.size,
@@ -86,26 +90,10 @@ class CourseUnitPagerAdapter(
                         CourseUnitYoutubePlayerFragment.newInstance(minifiedUnit)
                     }
 
-                    isYoutubeVideo -> {
-                        CourseUnitOnlyOnYoutubeFragment.newInstance(minifiedUnit)
-                    }
-
                     else -> {
                         CourseUnitMobileNotSupportedFragment.newInstance(minifiedUnit, courseData)
                     }
                 }
-            }
-
-            minifiedUnit.isMultiDevice.not() -> {
-                CourseUnitMobileNotSupportedFragment.newInstance(minifiedUnit, courseData)
-            }
-
-            minifiedUnit is DiscussionBlockModel && environment.config.isDiscussionsEnabled -> {
-                CourseUnitDiscussionFragment.newInstance(minifiedUnit, courseData)
-            }
-
-            minifiedUnit.isEmptyComponent -> {
-                CourseUnitEmptyFragment.newInstance(minifiedUnit)
             }
 
             minifiedUnit is HtmlBlockModel -> {
@@ -125,4 +113,7 @@ class CourseUnitPagerAdapter(
     override fun getItemCount(): Int = componentList.size
 
     fun getComponentIndex(component: CourseComponent): Int = componentList.indexOf(component)
+
+    fun getItemdCount(): Int = componentList.size
+
 }

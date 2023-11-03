@@ -13,6 +13,7 @@ open class DeepLink(val screenName: String) : Parcelable {
         const val PATH_ID = "path_id"
         const val TOPIC_ID = "topic_id"
         const val THREAD_ID = "thread_id"
+        const val THREAD_ID_ = "thread_id_"
     }
 
     var courseId: String? = null

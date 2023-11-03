@@ -96,8 +96,16 @@ class CourseUnitPagerAdapter(
                 }
             }
 
+            minifiedUnit.isMultiDevice.not() -> {
+                CourseUnitMobileNotSupportedFragment.newInstance(minifiedUnit, courseData)
+            }
+
             minifiedUnit is DiscussionBlockModel && environment.config.isDiscussionsEnabled -> {
                 CourseUnitDiscussionFragment.newInstance(minifiedUnit, courseData)
+            }
+
+            minifiedUnit.isEmptyComponent -> {
+                CourseUnitEmptyFragment.newInstance(minifiedUnit)
             }
 
             minifiedUnit is HtmlBlockModel -> {
@@ -105,12 +113,7 @@ class CourseUnitPagerAdapter(
                 CourseUnitWebViewFragment.newInstance(minifiedUnit, courseData)
             }
 
-            minifiedUnit.isEmptyComponent -> {
-                CourseUnitEmptyFragment.newInstance(minifiedUnit)
-            }
-
             else -> {
-                // in case of !minifiedUnit.isMultiDevice else executed
                 CourseUnitMobileNotSupportedFragment.newInstance(minifiedUnit, courseData)
             }
         }

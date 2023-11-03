@@ -191,6 +191,27 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
         if (!isVideoMode) {
             courseCelebrationStatus
         }
+    }
+
+    private fun initViews_() {
+        if (courseComponentId == null && environment.loginPrefs.isUserLoggedIn.not()) {
+            EventBus.getDefault().post(LogoutEvent())
+            return
+        }
+        onLoadData()
+
+        if (subsection?.children.isNullOrEmpty()) {
+            showComponentNotSupportError()
+            return
+        }
+
+        setupToolbar()
+        initAdapter()
+        // Enforce to intercept single scrolling direction
+        UiUtils.enforceSingleScrollDirection(binding.pager2)
+        if (!isVideoMode) {
+            courseCelebrationStatus
+        }
         binding.pager2.setVisibility(true)
         binding.stateLayout.root.setVisibility(false)
 
